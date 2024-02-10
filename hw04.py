@@ -30,30 +30,30 @@ def input_error(func):
     return inner
 
 @input_error
-def parse_input(user_input):
+def parse_input(user_input: str) -> tuple[str, ...]:
     cmd, *args = user_input.split()
     cmd = cmd.strip().lower()
     return cmd, *args
 
 @input_error
-def add_contact(args, contacts):
+def add_contact(args: tuple[str, str], contacts: dict[str, str]) -> str:
     name, phone = args
     contacts[name] = phone
     return "Contact added."
 
 @input_error
-def change_contact(args, contacts):
+def change_contact(args: tuple[str, str], contacts: dict[str, str]) -> str:
     name, phone = args
     contacts[name] = phone
     return "Contact updated."
 
 @input_error
-def show_phone(args, contacts):
+def show_phone(args: tuple[str], contacts: dict[str, str]) -> str:
     name = args[0]
     return contacts.get(name, "The name wasn`t found.")
 
 @input_error    
-def show_all(contacts):
+def show_all(contacts: dict[str, str]) -> dict[str, str]:
     return contacts   
 
 def main():
