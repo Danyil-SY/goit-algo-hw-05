@@ -16,15 +16,11 @@
 '''
 
 def caching_fibonacci() -> callable:
-    """
-    Returns a function that calculates the Fibonacci sequence with caching.
-    """
+    """Returns a function that calculates the Fibonacci sequence with caching."""
     cache = {}
     
     def fibonacci(n: int) -> int:
-        """
-        Calculates the Fibonacci number for a given index.
-        """        
+        """Calculates the Fibonacci number for a given index."""        
         if n <= 0:
             return 0
         elif n == 1:
