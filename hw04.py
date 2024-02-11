@@ -14,6 +14,9 @@
 '''
 
 def input_error(func):
+    """
+    Decorator function to handle input errors.
+    """
     def inner(*args, **kwargs):
         try:
             return func(*args, **kwargs)
@@ -31,24 +34,40 @@ def input_error(func):
 
 @input_error
 def parse_input(user_input: str) -> tuple[str, ...]:
+    """
+    Parse user input and return a tuple with command and arguments.
+    """
     cmd, *args = user_input.split()
     cmd = cmd.strip().lower()
     return cmd, *args
 
 @input_error
 def add_contact(args: tuple[str, str], contacts: dict[str, str]) -> str:
+    """
+    Add a new contact to the contacts dictionary.
+    """
     name, phone = args
+    if name in contacts:
+        return f"Contact '{name}' already exists. Use 'change' command to update."
     contacts[name] = phone
     return "Contact added."
 
 @input_error
 def change_contact(args: tuple[str, str], contacts: dict[str, str]) -> str:
+    """
+    Update a contact in the contacts dictionary.
+    """
     name, phone = args
+    if name not in contacts:
+        return f"Contact '{name}' not found. Use 'add' command to create a new contact."
     contacts[name] = phone
     return "Contact updated."
 
 @input_error
 def show_phone(args: tuple[str], contacts: dict[str, str]) -> str:
+    """
+    Show the phone number of a contact.
+    """
     name = args[0]
     return contacts.get(name, "The name wasn`t found.")
 
@@ -57,6 +76,9 @@ def show_all(contacts: dict[str, str]) -> dict[str, str]:
     return contacts   
 
 def main():
+    """
+    Main function to interact with the assistant bot.
+    """
     contacts = {}
     print("Welcome to the assistant bot!")
     while True:
@@ -77,7 +99,7 @@ def main():
         elif command == 'all':
             print(show_all(contacts))
         else:
-            print("Invalid command")
+            print("Invalid command.")
 
 if __name__ == '__main__':
     main()

@@ -20,60 +20,78 @@
 import sys
 
 
-# Parse logs
 def parse_log_line(line: str) -> dict:
+    """
+    Parse a log line and return a dictionary with date, time, level, and message.
+    """
     parts = line.split(maxsplit=3)
 
-    return {'date': parts[0], 
-            'time': parts[1], 
-            'level': parts[2], 
-            'message': parts[3].strip()}
+    return {
+        'date': parts[0], 
+        'time': parts[1], 
+        'level': parts[2], 
+        'message': parts[3].strip()
+    }
 
-# Load logs from a file
 def load_logs(file_path: str) -> list:
+    """
+    Load logs from a file and return a list of log dictionaries.
+    """
     logs = []
-
-    with open(file_path, 'r') as file:
-        for line in file:
-            logs.append(parse_log_line(line))
-
+    try:
+        with open(file_path, 'r') as file:
+            for line in file:
+                logs.append(parse_log_line(line))
+    except Exception as e:
+        print(f"Exception: {e}")   
     return logs
 
-# Filter logs by level
-def filter_logs_by_level(logs: list, level: str) -> list:
-    return [log for log in logs if log['level'] == level.upper()]
-
 def count_logs_by_level(logs: list) -> dict:
+    """
+    Count logs by level and return a dictionary with counts for each level.
+    """
     counts = {'INFO': 0, 'ERROR': 0, 'DEBUG': 0, 'WARNING': 0}
-
     for log in logs:
         counts[log['level']] += 1
-
     return counts
 
-# Show results
 def display_log_counts(counts: dict) -> None:
+    """
+    Print log level counts.
+    """
     print("Log Level   |   Count")
     print("---------------------")
-
     for level, count in counts.items():
         print(f"{level.ljust(11)} |   {count}")
 
-# Main function
+def show_logs_by_level(logs: list, level: str) -> list:
+    """
+    Print details of logs for the specified level.
+    """
+    filtered_logs = [log for log in logs if log['level'] == level.upper()]
+    print(f"\nDetails of logs for level '{level.upper()}':")
+    for log in filtered_logs:
+        print(f"{log['date']} {log['time']} - {log['message']}")
+
 def main(file_path: str, level: str = None) -> None:
+    """
+    Main function to analyze log files.
+    """
     logs = load_logs(file_path)
 
-    if level:
-        logs = filter_logs_by_level(logs, level)
-
+    if not logs:
+        return
+    
     counts = count_logs_by_level(logs)
     display_log_counts(counts)
+    
+    if level:
+        show_logs_by_level(logs, level)
 
 if __name__ == "__main__":
     if len(sys.argv) < 2:
         print("Usage: python log_analyzer.py <file_path> [<level>]")
-        sys.exit(1)
-
-    file_path = sys.argv[1]
-    level = sys.argv[2] if len(sys.argv) > 2 else None
-    main(file_path, level)
+    else:
+        file_path = sys.argv[1]
+        level = sys.argv[2] if len(sys.argv) > 2 else None
+        main(file_path, level)

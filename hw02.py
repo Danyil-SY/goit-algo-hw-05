@@ -12,11 +12,13 @@ from typing import Callable
 
 
 def generator_numbers(text: str):
-    pattern = r'\b\d+\.\d+\b'
+    """Generator function to extract floating-point numbers from a text."""
+    pattern = r'\s\d+\d.\d+\s'
     for match in re.findall(pattern, text):
         yield float(match)
 
 def sum_profit(text: str, func: Callable):
+    """Sum the numbers extracted using the provided function."""
     return sum(func(text))
 
 # Test
