@@ -57,7 +57,7 @@ from typing import Callable
 
 def generator_numbers(text: str):
     """Generator function to extract floating-point numbers from a text."""
-    pattern = r'\s\d+\d.\d+\s'
+    pattern = r'\s\d+\.\d+\s'
     for match in re.findall(pattern, text):
         yield float(match)
 
